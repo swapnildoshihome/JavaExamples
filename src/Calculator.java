@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class Calculator extends JFrame {
     final JButton[] buttons = {
@@ -97,6 +99,28 @@ public class Calculator extends JFrame {
                 displayedResult.setText("0000");
             }
 
+        }
+    }
+
+    private class KeyEventHandle implements KeyListener {
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            String typedKey = String.valueOf(e.getKeyChar());
+
+            if (typedKey.matches("\\d")) {
+                double newResult = Double.parseDouble(displayedResult.getText()) * 10;
+                newResult += Double.parseDouble(typedKey);
+                displayedResult.setText(String.valueOf(newResult));
+            }
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
         }
     }
 }
