@@ -39,11 +39,11 @@ public class Calculator extends JFrame {
 
         bpanel = new JPanel();
         EventHandler handler = new EventHandler();
-        KeyEventHandle keyhandler = new KeyEventHandle();
+
 
         for (JButton b : buttons) {
             b.addActionListener(handler);
-            b.addKeyListener(keyhandler);
+            b.addKeyListener(handler);
             bpanel.add(b);
         }
 
@@ -77,6 +77,10 @@ public class Calculator extends JFrame {
                 case "/":
                     result = num1 / num2;
                     break;
+                case "Cls":
+                    result = 0.0;
+                    break;
+
             }
 
             displayedResult.setText(result.toString());
@@ -88,7 +92,7 @@ public class Calculator extends JFrame {
 
     }
 
-    class EventHandler implements ActionListener {
+    class EventHandler implements ActionListener, KeyListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -101,10 +105,6 @@ public class Calculator extends JFrame {
             }
         }
 
-    }
-
-    private class KeyEventHandle implements KeyListener {
-
         @Override
         public void keyTyped(KeyEvent e) {
 
@@ -114,6 +114,8 @@ public class Calculator extends JFrame {
                 numKeys(typedKey);
             } else if (typedKey.matches("\\+|-|\\*|/|=")) {
                 opeKeys(typedKey);
+            } else if (typedKey.matches("C|c")) {
+                opeKeys("Cls");
             }
         }
 
@@ -124,5 +126,6 @@ public class Calculator extends JFrame {
         @Override
         public void keyReleased(KeyEvent e) {
         }
+
     }
 }
