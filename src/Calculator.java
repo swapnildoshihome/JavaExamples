@@ -39,10 +39,11 @@ public class Calculator extends JFrame {
 
         bpanel = new JPanel();
         EventHandler handler = new EventHandler();
-
+        KeyEventHandle keyhandler = new KeyEventHandle();
 
         for (JButton b : buttons) {
             b.addActionListener(handler);
+            b.addKeyListener(keyhandler);
             bpanel.add(b);
         }
 
@@ -52,66 +53,67 @@ public class Calculator extends JFrame {
 
     }
 
+    private void numKeys(String num) {
+        double number = Double.parseDouble(num);
+        double newResult = Double.parseDouble(displayedResult.getText()) * 10;
+        newResult += number;
+        displayedResult.setText(String.valueOf(newResult));
+    }
+
+    private void opeKeys(String opt) {
+
+        if (opt.equals("=")) {
+            num2 = Double.parseDouble(displayedResult.getText());
+            switch (operator) {
+                case "+":
+                    result = num1 + num2;
+                    break;
+                case "-":
+                    result = num1 - num2;
+                    break;
+                case "*":
+                    result = num1 * num2;
+                    break;
+                case "/":
+                    result = num1 / num2;
+                    break;
+            }
+
+            displayedResult.setText(result.toString());
+        } else {
+            operator = opt;
+            num1 = Double.parseDouble(displayedResult.getText());
+            displayedResult.setText("0000");
+        }
+
+    }
+
     class EventHandler implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getActionCommand().matches("\\d")) {
-                numericalkey(e);
-            } else {
-                operationkey(e);
+            String input = e.getActionCommand();
 
+            if (input.matches("\\d")) {
+                numKeys(input);
+            } else {
+                opeKeys(input);
             }
         }
 
-        private void numericalkey(ActionEvent event) {
-            double newResult = Double.parseDouble(displayedResult.getText()) * 10;
-            newResult += Double.parseDouble(event.getActionCommand());
-            displayedResult.setText(String.valueOf(newResult));
-        }
-
-        private void operationkey(ActionEvent event) {
-            String opt = event.getActionCommand();
-
-            if (opt.equals("=")) {
-                num2 = Double.parseDouble(displayedResult.getText());
-                switch (operator) {
-                    case "+":
-                        result = num1 + num2;
-                        break;
-                    case "-":
-                        result = num1 - num2;
-                        break;
-                    case "*":
-                        result = num1 * num2;
-                        break;
-                    case "/":
-                        result = num1 / num2;
-                        break;
-
-                }
-
-                displayedResult.setText(result.toString());
-
-            } else {
-                operator = opt;
-                num1 = Double.parseDouble(displayedResult.getText());
-                displayedResult.setText("0000");
-            }
-
-        }
     }
 
     private class KeyEventHandle implements KeyListener {
 
         @Override
         public void keyTyped(KeyEvent e) {
+
             String typedKey = String.valueOf(e.getKeyChar());
 
             if (typedKey.matches("\\d")) {
-                double newResult = Double.parseDouble(displayedResult.getText()) * 10;
-                newResult += Double.parseDouble(typedKey);
-                displayedResult.setText(String.valueOf(newResult));
+                numKeys(typedKey);
+            } else if (typedKey.matches("\\+|-|\\*|/|=")) {
+                opeKeys(typedKey);
             }
         }
 
