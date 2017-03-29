@@ -22,7 +22,9 @@ public class Calculator extends JFrame {
             new JButton("Cls"),
             new JButton("0"),
             new JButton("="),
-            new JButton("/")
+            new JButton("/"),
+            new JButton("Del"),
+            new JButton("His")
     };
     JLabel displayedResult;
     JPanel bpanel;
@@ -47,7 +49,7 @@ public class Calculator extends JFrame {
             bpanel.add(b);
         }
 
-        GridLayout layout1 = new GridLayout(4, 4, 5, 5);
+        GridLayout layout1 = new GridLayout(5, 4, 5, 5);
         bpanel.setLayout(layout1);
         add(bpanel, BorderLayout.CENTER);
 
@@ -58,6 +60,12 @@ public class Calculator extends JFrame {
         double newResult = Double.parseDouble(displayedResult.getText()) * 10;
         newResult += number;
         displayedResult.setText(String.valueOf(newResult));
+    }
+
+    private void deletkey() {
+        double newresult = Double.parseDouble(displayedResult.getText());
+        newresult = (newresult - (newresult % 10)) / 10;
+        displayedResult.setText(String.valueOf(newresult));
     }
 
     private void opeKeys(String opt) {
@@ -96,35 +104,36 @@ public class Calculator extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String input = e.getActionCommand();
-
-            if (input.matches("\\d")) {
-                numKeys(input);
-            } else {
-                opeKeys(input);
-            }
+            keyswitch(e.getActionCommand());
         }
 
         @Override
         public void keyTyped(KeyEvent e) {
-
-            String typedKey = String.valueOf(e.getKeyChar());
-
-            if (typedKey.matches("\\d")) {
-                numKeys(typedKey);
-            } else if (typedKey.matches("\\+|-|\\*|/|=")) {
-                opeKeys(typedKey);
-            } else if (typedKey.matches("C|c")) {
-                opeKeys("Cls");
-            }
+            keyswitch(String.valueOf(e.getKeyChar()));
         }
 
         @Override
         public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == 8) {
+                deletkey();
+            }
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
+        }
+
+
+        private void keyswitch(String typedKey) {
+            if (typedKey.matches("\\d")) {
+                numKeys(typedKey);
+            } else if (typedKey.matches("\\+|-|\\*|/|=")) {
+                opeKeys(typedKey);
+            } else if (typedKey.matches("C|c|Cls")) {
+                opeKeys("Cls");
+            } else if (typedKey.matches("Del")) {
+                deletkey();
+            }
         }
 
     }
